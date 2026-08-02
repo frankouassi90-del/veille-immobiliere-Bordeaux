@@ -3,7 +3,7 @@ name: Veille immobiliere Belcier quotidienne
 permissions:
   contents: write
   
-  on:
+on:
   schedule:
     - cron: "0 7 * * *"   # 07:00 UTC chaque jour (09:00 heure de Paris en ete)
   workflow_dispatch: {}
