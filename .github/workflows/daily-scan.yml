@@ -1,0 +1,27 @@
+name: Veille immobiliere Belcier quotidienne
+
+on:
+  schedule:
+    - cron: "0 7 * * *"   # 07:00 UTC chaque jour (09:00 heure de Paris en ete)
+  workflow_dispatch: {}
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: python main.py
+        env:
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+      - name: Commit data update
+        run: |
+          git config user.name "veille-immo-bot"
+          git config user.email "bot@local"
+          git add data/listings.json
+          git commit -m "Update listings $(date +%F)" || echo "Rien a committer"
+          git push

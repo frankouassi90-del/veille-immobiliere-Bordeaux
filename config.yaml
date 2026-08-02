@@ -1,0 +1,57 @@
+# Critères de recherche - Veille immobilière Belcier (Bordeaux)
+search:
+  postal_codes: ["33800"]
+  neighborhoods: ["Belcier", "Carle Vernet", "Gare Saint-Jean", "Nansouty"]
+  room_counts: [2, 3, 4]        # T2, T3, T4
+  seller_type: "agency_only"    # exclut systématiquement les annonces de particuliers
+  furnished:
+    enabled: true
+    # CORRECTIF (verifie le 02/08/2026 en navigateur reel) : bienici a bien un filtre
+    # natif "Meuble" / "Non meuble" en achat (section "Vos exigences particulieres"
+    # des criteres avances). L'affirmation initiale ("aucun filtre natif") etait fausse.
+    # Parametre d'URL exact non encore identifie (a tester : cocher le filtre dans le
+    # navigateur et lire l'URL resultante). En attendant, scan de mots-cles en filet
+    # de securite.
+    mode: "keyword_scan"
+    keywords: ["meublé", "meublée", "meuble", "LMNP", "entièrement équipé", "livré meublé"]
+
+sources:
+  bienici:
+    enabled: true
+    # base_url historique (endpoint JSON) CONSERVE POUR MEMOIRE MAIS NON UTILISE :
+    # verifie non fonctionnel le 02/08/2026 (ignore tous les filtres testes).
+    # Le scraper reel pilote maintenant un navigateur headless (Playwright),
+    # voir src/scraper_bienici.py.
+    base_url: "https://www.bienici.com/realEstateAds.json"
+  seloger:
+    enabled: false   # anti-bot Datadome fort, best-effort uniquement, désactivé par défaut
+  century21:
+    enabled: false
+
+request:
+  min_delay_seconds: 3
+  max_delay_seconds: 9
+  user_agents_file: "user_agents.txt"
+  proxies:
+    enabled: false
+    list_file: "proxies.txt"
+    rotation: "random"   # random | round_robin
+
+storage:
+  json_path: "data/listings.json"
+  google_sheets:
+    enabled: false
+    spreadsheet_id: ""
+    service_account_file: "service_account.json"
+
+alerts:
+  email:
+    enabled: false
+    smtp_host: ""
+    smtp_port: 587
+    from_addr: ""
+    to_addr: "frankouassi7@icloud.com"
+    smtp_password_env: "SMTP_PASSWORD"   # lu depuis une variable d'environnement, jamais en clair ici
+  webhook:
+    enabled: false
+    url_env: "WEBHOOK_URL"               # Slack/Discord/n8n, lu depuis une variable d'environnement
