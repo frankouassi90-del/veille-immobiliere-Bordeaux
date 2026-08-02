@@ -87,7 +87,7 @@ def fetch_bienici_listings(config, session=None):
         try:
             for rooms in config["search"]["room_counts"]:
                 url = SEARCH_URL_TEMPLATE.format(rooms=rooms)
-                page.goto(url, wait_until="networkidle", timeout=30000)
+                page.goto(url, wait_until="domcontentloaded", timeout=30000)
                 try:
                     page.wait_for_selector("article.ad-overview", timeout=15000)
                 except Exception:
