@@ -1,5 +1,6 @@
 name: Veille immobiliere Belcier quotidienne
-
+- run: pip install -r requirements.txt
+- run: python -m playwright install --with-deps chromium
 on:
   schedule:
     - cron: "0 7 * * *"   # 07:00 UTC chaque jour (09:00 heure de Paris en ete)
